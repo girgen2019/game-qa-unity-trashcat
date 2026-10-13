@@ -1,0 +1,24 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.properties
+
+# Allure
+allure-results/
+allure-report/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.class
+
+# Game builds and device artifacts (never commit binaries)
+*.apk
+*.aab
+*.exe
+*.ipa
+Builds/
+
+# OS
+.DS_Store
+Thumbs.db

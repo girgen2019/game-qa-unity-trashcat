@@ -1,0 +1,25 @@
+name: Build
+
+# Compiles the automation framework on every push.
+# Tests need a running game build + AltTester Desktop, so CI only checks that the code builds.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: automation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+      - run: chmod +x mvnw
+      - run: ./mvnw -B -DskipTests verify
