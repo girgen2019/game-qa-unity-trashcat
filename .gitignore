@@ -22,3 +22,6 @@ Builds/
 # OS
 .DS_Store
 Thumbs.db
+
+# Allure CLI downloaded by allure-maven
+.allure/
