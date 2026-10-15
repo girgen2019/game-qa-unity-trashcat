@@ -47,6 +47,15 @@
             <groupId>com.alttester</groupId>
             <artifactId>alttester</artifactId>
             <version>${alttester.version}</version>
+            <exclusions>
+                <!-- AltTester declares Lombok 1.18.26 as a regular dependency. It is only needed to compile
+                     AltTester itself, and as an annotation processor it breaks javac on JDK 21+ in the IDE
+                     ("TypeTag :: UNKNOWN"), so keep it off our classpath. -->
+                <exclusion>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
