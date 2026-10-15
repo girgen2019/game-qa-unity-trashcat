@@ -10,7 +10,7 @@ The project combines two parts:
 | Part | What's inside | Status |
 |---|---|---|
 | [🧪 Manual testing](manual/) | Test plan, checklists, bug reports and exploratory session notes from real devices | 🚧 In progress |
-| [🤖 Test automation](automation/) | Java framework on top of **AltTester®**: Page Objects for game screens, JUnit 5 tests, Allure reports, CI | 🚧 Skeleton ready |
+| [🤖 Test automation](automation/) | Java framework: ADB smoke tests on a real device ✅, AltTester® Page Objects for game screens 🚧, JUnit 5, Allure reports, CI | 🚧 In progress |
 
 ## 🛠 Stack
 
@@ -34,7 +34,38 @@ The game is built with the AltTester® Unity SDK, which lets tests find real gam
 | Game build | TrashCat 1.0 (build 350), arm64-v8a, Development Build with AltTester® SDK 2.3.0 |
 | PC | Windows 11 |
 
-## 🚀 Running the automation
+## ✅ What is tested now
+
+| ID | Test | Level | Runs in CI |
+|---|---|---|---|
+| SMK-01 | Game is installed on the device | Android device (ADB) | ❌ needs a phone |
+| SMK-02 | Cold start: game comes to the foreground, process is running | Android device (ADB) | ❌ needs a phone |
+| SMK-03 | Game keeps running 30 s: same process, no crash / ANR / unhandled Unity exception in logcat | Android device (ADB) | ❌ needs a phone |
+| — | `CrashDetector` unit tests on real logcat lines (incl. Xiaomi system noise) | Unit | ✅ |
+
+Each device test attaches screenshots and the logcat dump to the Allure report.
+
+## 🚀 Running the smoke tests on an Android device
+
+Needs only JDK 17+ and Android platform-tools (`adb`) — no AltTester Desktop.
+
+1. Enable **USB debugging** on the phone, connect it and check it is visible:
+   ```bash
+   adb devices
+   ```
+2. Install the game build (see [How it works](#-how-it-works)) — package `com.unity.trashdash`.
+3. Run the tests and open the report:
+   ```bash
+   cd automation
+   ./mvnw clean test
+   ./mvnw allure:serve
+   ```
+   If `adb` is not on `PATH`, pass its location:
+   `./mvnw clean test "-Dadb.path=C:/Users/<you>/AppData/Local/Android/Sdk/platform-tools/adb.exe"`
+
+Without a connected device the smoke tests are **skipped**, not failed.
+
+## 🚀 Running the AltTester® tests (next step)
 
 1. Build TrashCat with the AltTester® Unity SDK (Android or Windows) and install/launch it.
 2. Start **AltTester® Desktop 2.3.x** on the PC.
@@ -55,6 +86,7 @@ and can be overridden with `-D`, e.g. `./mvnw test -Dalttester.port=13001`.
 
 - [x] Instrumented Android build running on a real device
 - [x] Framework skeleton: config, driver lifecycle, base Page Object, CI build
+- [x] ADB smoke tests on a real device (install, cold start, 30 s stability, crash detection) with Allure attachments
 - [ ] Manual: test plan and checklists (gameplay, UI, interruptions, PC-specific checks)
 - [ ] Manual: bug reports with video and `adb logcat`
 - [ ] Automation: Page Objects for Start, Main menu, Game, Pause, Shop

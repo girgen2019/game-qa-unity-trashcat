@@ -1,7 +1,7 @@
 name: Build
 
-# Compiles the automation framework on every push.
-# Tests need a running game build + AltTester Desktop, so CI only checks that the code builds.
+# Builds the automation framework and runs the unit tests on every push.
+# Device tests (@Tag("android")) need a phone with the game, so CI excludes them.
 on:
   push:
     branches: [main]
@@ -22,4 +22,10 @@ jobs:
           java-version: 17
           cache: maven
       - run: chmod +x mvnw
-      - run: ./mvnw -B -DskipTests verify
+      - run: ./mvnw -B verify -DexcludedGroups=android
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results
+          path: automation/target/allure-results
+          retention-days: 14

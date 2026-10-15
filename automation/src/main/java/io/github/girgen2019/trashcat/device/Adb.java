@@ -1,0 +1,126 @@
+package io.github.girgen2019.trashcat.device;
+
+import io.github.girgen2019.trashcat.config.TestConfig;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Thin wrapper around the adb command line tool.
+ * Works without AltTester: it only talks to the Android OS, not to the game internals.
+ */
+public final class Adb {
+
+    private static final long COMMAND_TIMEOUT_SEC = 60;
+
+    private final String adbPath;
+
+    public Adb() {
+        this(TestConfig.adbPath());
+    }
+
+    public Adb(String adbPath) {
+        this.adbPath = adbPath;
+    }
+
+    /** Serial numbers of devices in the "device" state (connected and authorized). */
+    public List<String> connectedDevices() {
+        List<String> serials = new ArrayList<>();
+        for (String line : text("devices").split("\\R")) {
+            String[] parts = line.trim().split("\\s+");
+            if (parts.length == 2 && parts[1].equals("device")) {
+                serials.add(parts[0]);
+            }
+        }
+        return serials;
+    }
+
+    public boolean isInstalled(String packageName) {
+        return text("shell", "pm", "list", "packages", packageName)
+                .lines()
+                .anyMatch(line -> line.trim().equals("package:" + packageName));
+    }
+
+    /** Starts the app the same way as tapping its icon on the home screen. */
+    public void launch(String packageName) {
+        text("shell", "monkey", "-p", packageName, "-c", "android.intent.category.LAUNCHER", "1");
+    }
+
+    public void forceStop(String packageName) {
+        text("shell", "am", "force-stop", packageName);
+    }
+
+    /** Process id of the running app, empty if the app is not running. */
+    public Optional<Integer> pidOf(String packageName) {
+        String out = text("shell", "pidof", packageName).trim();
+        if (out.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(Integer.parseInt(out.split("\\s+")[0]));
+    }
+
+    /** The activity currently on top of the screen, e.g. "com.unity.trashdash/com.unity3d.player.UnityPlayerActivity". */
+    public String topResumedActivity() {
+        return text("shell", "dumpsys", "activity", "activities")
+                .lines()
+                .filter(line -> line.contains("topResumedActivity") || line.contains("mResumedActivity"))
+                .findFirst()
+                .orElse("")
+                .trim();
+    }
+
+    public void clearLogcat() {
+        text("logcat", "-c");
+    }
+
+    /** Dumps the current logcat buffer in the "brief" format: "E/Tag(pid): message". */
+    public String logcat() {
+        return text("logcat", "-d", "-v", "brief");
+    }
+
+    /** PNG screenshot of the device screen. */
+    public byte[] screenshot() {
+        return run("exec-out", "screencap", "-p");
+    }
+
+    private String text(String... args) {
+        return new String(run(args), StandardCharsets.UTF_8);
+    }
+
+    private byte[] run(String... args) {
+        List<String> command = new ArrayList<>();
+        command.add(adbPath);
+        command.addAll(Arrays.asList(args));
+        try {
+            Process process = new ProcessBuilder(command).redirectErrorStream(false).start();
+            byte[] out;
+            try (InputStream in = process.getInputStream()) {
+                out = readAll(in);
+            }
+            if (!process.waitFor(COMMAND_TIMEOUT_SEC, TimeUnit.SECONDS)) {
+                process.destroyForcibly();
+                throw new IllegalStateException("adb timed out: " + String.join(" ", command));
+            }
+            return out;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Cannot run adb (" + adbPath + "). Is Android platform-tools installed?", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while running adb", e);
+        }
+    }
+
+    private static byte[] readAll(InputStream in) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        in.transferTo(buffer);
+        return buffer.toByteArray();
+    }
+}

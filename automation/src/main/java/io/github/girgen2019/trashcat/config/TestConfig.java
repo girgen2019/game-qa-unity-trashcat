@@ -40,6 +40,22 @@ public final class TestConfig {
         return Double.parseDouble(get("wait.timeoutSec"));
     }
 
+    public static String adbPath() {
+        return get("adb.path");
+    }
+
+    public static String androidPackage() {
+        return get("android.package");
+    }
+
+    public static int launchTimeoutSec() {
+        return Integer.parseInt(get("android.launchTimeoutSec"));
+    }
+
+    public static int stabilitySec() {
+        return Integer.parseInt(get("android.stabilitySec"));
+    }
+
     private static String get(String key) {
         String value = System.getProperty(key, PROPS.getProperty(key));
         if (value == null) {
