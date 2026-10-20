@@ -1,0 +1,16 @@
+# Store text files with LF in the repository, check out with the platform default.
+* text=auto eol=lf
+
+# Shell scripts must keep LF everywhere: CI runs ./mvnw on Linux.
+mvnw text eol=lf
+*.sh text eol=lf
+
+# Windows scripts need CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary files: never touch.
+*.png binary
+*.jpg binary
+*.apk binary
+*.jar binary
