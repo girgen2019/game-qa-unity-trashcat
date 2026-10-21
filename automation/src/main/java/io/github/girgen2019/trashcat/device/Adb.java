@@ -92,6 +92,32 @@ public final class Adb {
                 .trim();
     }
 
+    /** System property of the device, e.g. "ro.product.model" or "ro.build.version.release". */
+    public String property(String name) {
+        return text("shell", "getprop", name).trim();
+    }
+
+    /** Installed app version as "versionName (versionCode)", e.g. "1.0 (350)". */
+    public String appVersion(String packageName) {
+        String dump = text("shell", "dumpsys", "package", packageName);
+        String name = valueAfter(dump, "versionName=");
+        String code = valueAfter(dump, "versionCode=");
+        return name + " (" + code + ")";
+    }
+
+    private static String valueAfter(String text, String key) {
+        int start = text.indexOf(key);
+        if (start < 0) {
+            return "unknown";
+        }
+        start += key.length();
+        int end = start;
+        while (end < text.length() && !Character.isWhitespace(text.charAt(end))) {
+            end++;
+        }
+        return text.substring(start, end);
+    }
+
     public void clearLogcat() {
         text("logcat", "-c");
     }

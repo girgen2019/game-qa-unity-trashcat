@@ -3,6 +3,7 @@ package io.github.girgen2019.trashcat.smoke;
 import io.github.girgen2019.trashcat.config.TestConfig;
 import io.github.girgen2019.trashcat.device.Adb;
 import io.github.girgen2019.trashcat.device.CrashDetector;
+import io.github.girgen2019.trashcat.report.AllureEnvironment;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
@@ -15,7 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.io.ByteArrayInputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +47,14 @@ class AndroidLaunchSmokeTest {
         List<String> devices = adb.connectedDevices();
         assumeTrue(!devices.isEmpty(), "No authorized Android device connected - skipping device smoke tests");
         System.out.println("Running device smoke on: " + devices.get(0));
+
+        Map<String, String> env = new LinkedHashMap<>();
+        env.put("Device", adb.property("ro.product.manufacturer") + " " + adb.property("ro.product.model"));
+        env.put("Android", adb.property("ro.build.version.release") + " (SDK " + adb.property("ro.build.version.sdk") + ")");
+        env.put("Game package", PACKAGE);
+        env.put("Game version", adb.appVersion(PACKAGE));
+        env.put("Device serial", devices.get(0));
+        AllureEnvironment.write(env);
     }
 
     @Test
