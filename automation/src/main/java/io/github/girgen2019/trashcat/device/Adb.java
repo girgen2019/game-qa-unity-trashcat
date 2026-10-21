@@ -49,9 +49,24 @@ public final class Adb {
                 .anyMatch(line -> line.trim().equals("package:" + packageName));
     }
 
-    /** Starts the app the same way as tapping its icon on the home screen. */
+    /**
+     * Starts the app's launcher activity, the same as tapping its icon on the home screen.
+     * Uses "am start" instead of "monkey": on the Redmi A5 monkey first scans old tombstones,
+     * which made every launch take about a minute.
+     */
     public void launch(String packageName) {
-        text("shell", "monkey", "-p", packageName, "-c", "android.intent.category.LAUNCHER", "1");
+        text("shell", "am", "start", "-W", "-n", launcherActivity(packageName));
+    }
+
+    /** Launcher activity component, e.g. "com.unity.trashdash/com.unity3d.player.UnityPlayerActivity". */
+    public String launcherActivity(String packageName) {
+        return text("shell", "cmd", "package", "resolve-activity", "--brief",
+                "-c", "android.intent.category.LAUNCHER", packageName)
+                .lines()
+                .map(String::trim)
+                .filter(line -> line.startsWith(packageName + "/"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No launcher activity found for " + packageName));
     }
 
     public void forceStop(String packageName) {
