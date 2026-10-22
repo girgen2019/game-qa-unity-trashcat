@@ -8,6 +8,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -39,13 +40,19 @@ class AndroidLaunchSmokeTest {
     private static final String PACKAGE = TestConfig.androidPackage();
 
     private static Adb adb;
+    private static boolean deviceConnected;
     private static Integer launchedPid;
 
     @BeforeAll
     static void connectToDevice() {
         adb = new Adb();
         List<String> devices = adb.connectedDevices();
-        assumeTrue(!devices.isEmpty(), "No authorized Android device connected - skipping device smoke tests");
+        deviceConnected = !devices.isEmpty();
+        if (!deviceConnected) {
+            // Do not abort here: an assumption in @BeforeAll hides the tests from the Surefire report
+            // ("Tests run: 0"). The per-test check below reports each of them as skipped instead.
+            return;
+        }
         System.out.println("Running device smoke on: " + devices.get(0));
 
         Map<String, String> env = new LinkedHashMap<>();
@@ -55,6 +62,11 @@ class AndroidLaunchSmokeTest {
         env.put("Game version", adb.appVersion(PACKAGE));
         env.put("Device serial", devices.get(0));
         AllureEnvironment.write(env);
+    }
+
+    @BeforeEach
+    void requireDevice() {
+        assumeTrue(deviceConnected, "No authorized Android device connected - skipping device smoke tests");
     }
 
     @Test
