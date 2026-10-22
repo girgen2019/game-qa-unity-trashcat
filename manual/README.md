@@ -16,6 +16,6 @@ Artifacts are added here only after real test runs — no placeholders.
 | Folder | Content |
 |---|---|
 | [`test-plan.md`](test-plan.md) | Scope, test types, entry/exit criteria, bug report format ✅ |
-| [`checklists/`](checklists/) | Settings ✅ · Gameplay ✅ · Interruptions ✅ · Store, PC-specific checks 🚧 |
+| [`checklists/`](checklists/) | Settings ✅ · Gameplay ✅ · Interruptions ✅ · Store ✅ · PC-specific checks 🚧 |
 | `bug-reports/` | Bugs found: steps, expected/actual, severity, video/screenshots, logcat |
 | `sessions/` | Exploratory testing session reports |
