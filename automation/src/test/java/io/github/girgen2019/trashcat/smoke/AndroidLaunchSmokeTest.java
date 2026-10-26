@@ -124,6 +124,38 @@ class AndroidLaunchSmokeTest {
                 .isEmpty();
     }
 
+    @Test
+    @Order(4)
+    @DisplayName("SMK-05 Game starts again after it was closed")
+    @Description("Force-stop the running game and launch it again: it comes back to the foreground "
+            + "in a new process and does not crash on the second start")
+    void gameRestartsAfterBeingClosed() throws InterruptedException {
+        assumeTrue(launchedPid != null, "Game was not launched by SMK-02");
+
+        Allure.step("Close the game (force-stop) and clear logcat", () -> {
+            adb.forceStop(PACKAGE);
+            adb.clearLogcat();
+        });
+        assertThat(adb.pidOf(PACKAGE)).as("Game process must be gone after force-stop").isEmpty();
+
+        Allure.step("Launch " + PACKAGE + " again", () -> adb.launch(PACKAGE));
+        String topActivity = waitForForeground(TestConfig.launchTimeoutSec());
+        Thread.sleep(5000); // let the second start settle before reading logcat
+        attachScreenshot("After restart");
+        String logcat = adb.logcat();
+        Allure.addAttachment("logcat after restart", "text/plain", logcat, ".txt");
+
+        assertThat(topActivity).as("Game activity must be on top after restart").contains(PACKAGE);
+        assertThat(adb.pidOf(PACKAGE))
+                .as("Game must run in a new process (old pid %d)", launchedPid)
+                .isPresent()
+                .get()
+                .isNotEqualTo(launchedPid);
+        assertThat(CrashDetector.findCrashLines(logcat, PACKAGE))
+                .as("Crash markers in logcat after restart")
+                .isEmpty();
+    }
+
     private static String waitForForeground(int timeoutSec) throws InterruptedException {
         long deadline = System.currentTimeMillis() + timeoutSec * 1000L;
         String top = "";

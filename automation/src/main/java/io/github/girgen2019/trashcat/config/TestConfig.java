@@ -56,6 +56,14 @@ public final class TestConfig {
         return Integer.parseInt(get("android.stabilitySec"));
     }
 
+    public static int maxColdStartMs() {
+        return Integer.parseInt(get("android.maxColdStartMs"));
+    }
+
+    public static int maxMemoryMb() {
+        return Integer.parseInt(get("android.maxMemoryMb"));
+    }
+
     private static String get(String key) {
         String value = System.getProperty(key, PROPS.getProperty(key));
         if (value == null) {

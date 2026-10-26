@@ -55,7 +55,17 @@ public final class Adb {
      * which made every launch take about a minute.
      */
     public void launch(String packageName) {
-        text("shell", "am", "start", "-W", "-n", launcherActivity(packageName));
+        launchAndMeasure(packageName);
+    }
+
+    /** Launches the app like {@link #launch} and returns the launch time ("TotalTime") in milliseconds. */
+    public int launchAndMeasure(String packageName) {
+        return AdbOutput.launchTotalTimeMs(text("shell", "am", "start", "-W", "-n", launcherActivity(packageName)));
+    }
+
+    /** Raw "dumpsys meminfo" report of the app (memory usage by category, in kilobytes). */
+    public String memoryInfo(String packageName) {
+        return text("shell", "dumpsys", "meminfo", packageName);
     }
 
     /** Launcher activity component, e.g. "com.unity.trashdash/com.unity3d.player.UnityPlayerActivity". */

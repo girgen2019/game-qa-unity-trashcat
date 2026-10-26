@@ -41,8 +41,12 @@ The game is built with the AltTester® Unity SDK, which lets tests find real gam
 | SMK-01 | Game is installed on the device | Android device (ADB) | ❌ needs a phone |
 | SMK-02 | Cold start: game comes to the foreground, process is running | Android device (ADB) | ❌ needs a phone |
 | SMK-03 | Game keeps running 30 s: same process, no crash / ANR / unhandled Unity exception in logcat | Android device (ADB) | ❌ needs a phone |
+| SMK-05 | Restart: force-stop the running game and launch it again — on top, new process, no crash *(written, not run yet)* | Android device (ADB) | ❌ needs a phone |
+| PERF-01 | Cold start (`am start -W` TotalTime) below `android.maxColdStartMs` (5000 ms) *(written, not run yet)* | Android device (ADB) | ❌ needs a phone |
+| PERF-02 | Memory (`dumpsys meminfo` TOTAL PSS) after 30 s below `android.maxMemoryMb` (600 MB) *(written, not run yet)* | Android device (ADB) | ❌ needs a phone |
 | — | `CrashDetector` unit tests on real logcat lines (incl. Xiaomi system noise) | Unit | ✅ |
 | — | `TestConfig` unit tests: defaults from `config.properties`, `-D` overrides, trimming | Unit | ✅ |
+| — | `AdbOutput` unit tests: parsing `am start -W` and `dumpsys meminfo` output (real samples) | Unit | ✅ |
 
 Each device test attaches screenshots and the logcat dump to the Allure report.
 
