@@ -4,6 +4,7 @@ import io.github.girgen2019.trashcat.BaseTest;
 import io.github.girgen2019.trashcat.pages.GamePlayPage;
 import io.github.girgen2019.trashcat.pages.MainMenuPage;
 import io.github.girgen2019.trashcat.pages.PauseMenuPage;
+import io.github.girgen2019.trashcat.pages.ShopPage;
 import io.github.girgen2019.trashcat.pages.StartPage;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
@@ -74,5 +75,16 @@ class GameFlowTest extends BaseTest {
         MainMenuPage menu = Allure.step("Pause and tap Exit", () -> game.pressPause().pressExit());
 
         assertThat(menu.isDisplayed()).as("Main menu after leaving the run").isTrue();
+    }
+
+    @Test
+    @DisplayName("ALT-05 Store opens from the main menu with all four tabs")
+    void storeOpensWithAllTabs() {
+        MainMenuPage menu = start.pressStart();
+
+        ShopPage shop = Allure.step("Tap Store", menu::pressStore);
+
+        assertThat(shop.isDisplayed()).as("Store: title and tabs Item, Character, Accessories, Themes").isTrue();
+        assertThat(shop.currencyCountersShown()).as("Store: coins and premium counters").isTrue();
     }
 }

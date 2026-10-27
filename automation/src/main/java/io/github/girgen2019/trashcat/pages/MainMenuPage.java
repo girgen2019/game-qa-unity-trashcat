@@ -33,6 +33,11 @@ public class MainMenuPage extends BasePage {
         return byPath("//CharZone/CharName").getText();
     }
 
+    public ShopPage pressStore() {
+        byPath("//StoreButton").tap();
+        return new ShopPage(driver);
+    }
+
     /** Waits until the Run button is ready (text "Run!"), then taps it. */
     public GamePlayPage pressRun() throws InterruptedException {
         long deadline = System.currentTimeMillis() + (long) (TestConfig.waitTimeoutSec() * 1000);
