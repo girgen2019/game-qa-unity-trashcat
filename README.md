@@ -51,6 +51,7 @@ The game is built with the AltTester® Unity SDK, which lets tests find real gam
 | ALT-05 | In-game: Store opens from the main menu with all four tabs and the currency counters *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | ALT-06 | In-game: distance in the HUD grows while the cat runs (read twice, 2 s apart) *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | ALT-07 | In-game: Settings popup opens (3 volume sliders, Delete Data, Close) and closes back to the menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
+| ALT-08 | In-game: Leaderboard opens (title, score table, close) and closes back to the menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | — | `CrashDetector` unit tests on real logcat lines (incl. Xiaomi system noise) | Unit | ✅ |
 | — | `TestConfig` unit tests: defaults from `config.properties`, `-D` overrides, trimming | Unit | ✅ |
 | — | `AdbOutput` unit tests: parsing `am start -W` and `dumpsys meminfo` output (real samples) | Unit | ✅ |

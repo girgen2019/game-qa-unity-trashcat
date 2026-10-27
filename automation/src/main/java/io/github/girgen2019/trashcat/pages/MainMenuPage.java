@@ -20,7 +20,7 @@ public class MainMenuPage extends BasePage {
     public boolean isDisplayed() {
         return byPath("//StoreButton") != null
                 && byPath("//MissionButton") != null
-                && byPath("//OpenLeaderboard") != null
+                && byPath("//Loadout/OpenLeaderboard") != null
                 && byPath("//SettingButton") != null
                 && byPath("//StartButton/Text") != null;
     }
@@ -31,6 +31,12 @@ public class MainMenuPage extends BasePage {
 
     public String characterName() {
         return byPath("//CharZone/CharName").getText();
+    }
+
+    /** The menu's own leaderboard button; the Game Over screen has another one with the same name. */
+    public LeaderboardPopup pressLeaderboard() {
+        byPath("//Loadout/OpenLeaderboard").tap();
+        return new LeaderboardPopup(driver);
     }
 
     public SettingsPopup pressSettings() {

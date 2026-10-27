@@ -2,6 +2,7 @@ package io.github.girgen2019.trashcat.game;
 
 import io.github.girgen2019.trashcat.BaseTest;
 import io.github.girgen2019.trashcat.pages.GamePlayPage;
+import io.github.girgen2019.trashcat.pages.LeaderboardPopup;
 import io.github.girgen2019.trashcat.pages.MainMenuPage;
 import io.github.girgen2019.trashcat.pages.PauseMenuPage;
 import io.github.girgen2019.trashcat.pages.SettingsPopup;
@@ -105,6 +106,20 @@ class GameFlowTest extends BaseTest {
 
         MainMenuPage back = Allure.step("Tap Close", settings::close);
         assertThat(back.isDisplayed()).as("Main menu after closing Settings").isTrue();
+    }
+
+    @Test
+    @DisplayName("ALT-08 Leaderboard opens and closes")
+    @Description("The menu's leaderboard button opens the high score table; its close button hides it "
+            + "and the main menu is usable again")
+    void leaderboardOpensAndCloses() {
+        MainMenuPage menu = start.pressStart();
+
+        LeaderboardPopup leaderboard = Allure.step("Tap Leaderboard", menu::pressLeaderboard);
+        assertThat(leaderboard.isDisplayed()).as("Leaderboard: title, score table, close button").isTrue();
+
+        MainMenuPage back = Allure.step("Tap Close", leaderboard::close);
+        assertThat(back.isDisplayed()).as("Main menu after closing the Leaderboard").isTrue();
     }
 
     @Test
