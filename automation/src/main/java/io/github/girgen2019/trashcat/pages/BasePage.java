@@ -30,6 +30,27 @@ public abstract class BasePage {
         return driver.waitForObject(wait);
     }
 
+    /** Shortcut for an object by its name in the scene, e.g. "StartButton". */
+    protected AltObject byName(String name) {
+        return waitFor(AltDriver.By.NAME, name);
+    }
+
+    /** Shortcut for an object by its hierarchy path, e.g. "//PauseMenu/Resume". */
+    protected AltObject byPath(String path) {
+        return waitFor(AltDriver.By.PATH, path);
+    }
+
+    /** Waits until the object is gone from the scene (a panel closed, a screen left). */
+    protected void waitUntilGone(AltDriver.By by, String value) {
+        AltFindObjectsParams find = new AltFindObjectsParams.Builder(by, value).build();
+        driver.waitForObjectToNotBePresent(new AltWaitForObjectsParams.Builder(find)
+                .withTimeout(TestConfig.waitTimeoutSec())
+                .build());
+    }
+
+    /** True when the screen's key objects are on the scene. */
+    public abstract boolean isDisplayed();
+
     public String currentScene() {
         return driver.getCurrentScene();
     }

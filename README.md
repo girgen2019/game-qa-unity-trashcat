@@ -44,6 +44,10 @@ The game is built with the AltTester® Unity SDK, which lets tests find real gam
 | SMK-05 | Restart: force-stop the running game and launch it again — on top, new process, no crash *(written, not run yet)* | Android device (ADB) | ❌ needs a phone |
 | PERF-01 | Cold start (`am start -W` TotalTime) below `android.maxColdStartMs` (5000 ms) *(written, not run yet)* | Android device (ADB) | ❌ needs a phone |
 | PERF-02 | Memory (`dumpsys meminfo` TOTAL PSS) after 30 s below `android.maxMemoryMb` (600 MB) *(written, not run yet)* | Android device (ADB) | ❌ needs a phone |
+| ALT-01 | In-game (AltTester®): START opens the main menu with a ready Run button *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
+| ALT-02 | In-game: Run! starts a run — the cat on screen, 3 lives *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
+| ALT-03 | In-game: Pause → Resume keeps the run and the lives *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
+| ALT-04 | In-game: Pause → Exit returns to the main menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | — | `CrashDetector` unit tests on real logcat lines (incl. Xiaomi system noise) | Unit | ✅ |
 | — | `TestConfig` unit tests: defaults from `config.properties`, `-D` overrides, trimming | Unit | ✅ |
 | — | `AdbOutput` unit tests: parsing `am start -W` and `dumpsys meminfo` output (real samples) | Unit | ✅ |
@@ -94,7 +98,8 @@ and can be overridden with `-D`, e.g. `./mvnw test -Dalttester.port=13001`.
 - [x] ADB smoke tests on a real device (install, cold start, 30 s stability, crash detection) with Allure attachments
 - [ ] Manual: test plan and checklists (gameplay, UI, interruptions, PC-specific checks)
 - [ ] Manual: bug reports with video and `adb logcat`
-- [ ] Automation: Page Objects for Start, Main menu, Game, Pause, Shop
+- [x] Automation: Page Objects for Start, Main menu, Game, Pause (names checked against the game scenes)
+- [ ] Automation: Page Object for the Shop
 - [ ] Automation: smoke tests (start game, run, pause/resume, game over, shop)
 - [ ] Allure report published from CI
 - [ ] Windows build and PC-specific checks

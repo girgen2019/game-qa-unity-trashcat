@@ -1,0 +1,48 @@
+package io.github.girgen2019.trashcat.pages;
+
+import com.alttester.AltDriver;
+import io.github.girgen2019.trashcat.config.TestConfig;
+
+/**
+ * Main menu (scene "Main"): Run!, Store, Missions, Leaderboard, Settings, character and theme.
+ * Object names are taken from the game scene Assets/Scenes/Main.unity.
+ */
+public class MainMenuPage extends BasePage {
+
+    // The Run button shows "Loading…" while the character and theme load, then "Run!"
+    private static final String RUN_READY_TEXT = "Run!";
+
+    public MainMenuPage(AltDriver driver) {
+        super(driver);
+    }
+
+    @Override
+    public boolean isDisplayed() {
+        return byPath("//StoreButton") != null
+                && byPath("//MissionButton") != null
+                && byPath("//OpenLeaderboard") != null
+                && byPath("//SettingButton") != null
+                && byPath("//StartButton/Text") != null;
+    }
+
+    public String runButtonText() {
+        return byPath("//StartButton/Text").getText();
+    }
+
+    public String characterName() {
+        return byPath("//CharZone/CharName").getText();
+    }
+
+    /** Waits until the Run button is ready (text "Run!"), then taps it. */
+    public GamePlayPage pressRun() throws InterruptedException {
+        long deadline = System.currentTimeMillis() + (long) (TestConfig.waitTimeoutSec() * 1000);
+        while (!RUN_READY_TEXT.equals(runButtonText())) {
+            if (System.currentTimeMillis() > deadline) {
+                throw new IllegalStateException("Run button is not ready, text: " + runButtonText());
+            }
+            Thread.sleep(200);
+        }
+        byPath("//StartButton").tap();
+        return new GamePlayPage(driver);
+    }
+}
