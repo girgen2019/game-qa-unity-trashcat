@@ -4,6 +4,7 @@ import io.github.girgen2019.trashcat.BaseTest;
 import io.github.girgen2019.trashcat.pages.GamePlayPage;
 import io.github.girgen2019.trashcat.pages.LeaderboardPopup;
 import io.github.girgen2019.trashcat.pages.MainMenuPage;
+import io.github.girgen2019.trashcat.pages.MissionsPopup;
 import io.github.girgen2019.trashcat.pages.PauseMenuPage;
 import io.github.girgen2019.trashcat.pages.SettingsPopup;
 import io.github.girgen2019.trashcat.pages.ShopPage;
@@ -120,6 +121,20 @@ class GameFlowTest extends BaseTest {
 
         MainMenuPage back = Allure.step("Tap Close", leaderboard::close);
         assertThat(back.isDisplayed()).as("Main menu after closing the Leaderboard").isTrue();
+    }
+
+    @Test
+    @DisplayName("ALT-09 Missions popup opens and closes")
+    @Description("The menu's Missions button opens the missions list; its close button hides it "
+            + "and the main menu is usable again")
+    void missionsOpenAndClose() {
+        MainMenuPage menu = start.pressStart();
+
+        MissionsPopup missions = Allure.step("Tap Missions", menu::pressMissions);
+        assertThat(missions.isDisplayed()).as("Missions: title, missions list, close button").isTrue();
+
+        MainMenuPage back = Allure.step("Tap Close", missions::close);
+        assertThat(back.isDisplayed()).as("Main menu after closing Missions").isTrue();
     }
 
     @Test

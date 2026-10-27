@@ -19,7 +19,7 @@ public class MainMenuPage extends BasePage {
     @Override
     public boolean isDisplayed() {
         return byPath("//StoreButton") != null
-                && byPath("//MissionButton") != null
+                && byPath("//Loadout/MissionButton") != null
                 && byPath("//Loadout/OpenLeaderboard") != null
                 && byPath("//SettingButton") != null
                 && byPath("//StartButton/Text") != null;
@@ -37,6 +37,11 @@ public class MainMenuPage extends BasePage {
     public LeaderboardPopup pressLeaderboard() {
         byPath("//Loadout/OpenLeaderboard").tap();
         return new LeaderboardPopup(driver);
+    }
+
+    public MissionsPopup pressMissions() {
+        byPath("//Loadout/MissionButton").tap();
+        return new MissionsPopup(driver);
     }
 
     public SettingsPopup pressSettings() {
