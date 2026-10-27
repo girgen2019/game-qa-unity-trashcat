@@ -33,6 +33,11 @@ public class MainMenuPage extends BasePage {
         return byPath("//CharZone/CharName").getText();
     }
 
+    public SettingsPopup pressSettings() {
+        byPath("//SettingButton").tap();
+        return new SettingsPopup(driver);
+    }
+
     public ShopPage pressStore() {
         byPath("//StoreButton").tap();
         return new ShopPage(driver);

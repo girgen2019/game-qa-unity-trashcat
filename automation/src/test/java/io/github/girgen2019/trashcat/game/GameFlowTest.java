@@ -4,6 +4,7 @@ import io.github.girgen2019.trashcat.BaseTest;
 import io.github.girgen2019.trashcat.pages.GamePlayPage;
 import io.github.girgen2019.trashcat.pages.MainMenuPage;
 import io.github.girgen2019.trashcat.pages.PauseMenuPage;
+import io.github.girgen2019.trashcat.pages.SettingsPopup;
 import io.github.girgen2019.trashcat.pages.ShopPage;
 import io.github.girgen2019.trashcat.pages.StartPage;
 import io.qameta.allure.Allure;
@@ -90,6 +91,20 @@ class GameFlowTest extends BaseTest {
 
         Allure.addAttachment("Distance", "text/plain", first + " m -> " + second + " m", ".txt");
         assertThat(second).as("Distance after 2 s (was %d m)", first).isGreaterThan(first);
+    }
+
+    @Test
+    @DisplayName("ALT-07 Settings popup opens and closes")
+    @Description("Settings shows the three volume sliders, Delete Data and Close; Close hides the popup "
+            + "and the main menu is usable again")
+    void settingsOpensAndCloses() {
+        MainMenuPage menu = start.pressStart();
+
+        SettingsPopup settings = Allure.step("Tap Settings", menu::pressSettings);
+        assertThat(settings.isDisplayed()).as("Settings: Master, Music, SFX sliders, Delete Data, Close").isTrue();
+
+        MainMenuPage back = Allure.step("Tap Close", settings::close);
+        assertThat(back.isDisplayed()).as("Main menu after closing Settings").isTrue();
     }
 
     @Test
