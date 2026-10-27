@@ -25,3 +25,6 @@ Thumbs.db
 
 # Allure CLI downloaded by allure-maven
 .allure/
+
+# Log written by the AltTester driver on each run
+AltTester.log
