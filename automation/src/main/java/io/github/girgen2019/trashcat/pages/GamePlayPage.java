@@ -29,6 +29,12 @@ public class GamePlayPage extends BasePage {
         return byPath("//CoinZone/CoinText").getText();
     }
 
+    /** Distance from the HUD; the game writes it as e.g. "123m" (GameState: worldDistance + "m"). */
+    public int distanceMeters() {
+        String text = byPath("//DistanceZone/DistanceText").getText();
+        return Integer.parseInt(text.replaceAll("[^0-9]", ""));
+    }
+
     public PauseMenuPage pressPause() {
         byPath("//pauseButton").tap();
         return new PauseMenuPage(driver);

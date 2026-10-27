@@ -78,6 +78,21 @@ class GameFlowTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("ALT-06 Distance in the HUD grows while the cat runs")
+    @Description("Reads the HUD distance twice, 2 s apart: the run must actually move forward")
+    void distanceGrowsWhileRunning() throws InterruptedException {
+        GamePlayPage game = start.pressStart().pressRun();
+
+        int first = game.distanceMeters();
+        Allure.step("Let the cat run for 2 s");
+        Thread.sleep(2000);
+        int second = game.distanceMeters();
+
+        Allure.addAttachment("Distance", "text/plain", first + " m -> " + second + " m", ".txt");
+        assertThat(second).as("Distance after 2 s (was %d m)", first).isGreaterThan(first);
+    }
+
+    @Test
     @DisplayName("ALT-05 Store opens from the main menu with all four tabs")
     void storeOpensWithAllTabs() {
         MainMenuPage menu = start.pressStart();
