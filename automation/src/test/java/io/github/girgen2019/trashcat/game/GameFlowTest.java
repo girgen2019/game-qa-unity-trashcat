@@ -150,6 +150,22 @@ class GameFlowTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("ALT-11 Store tabs switch the list on screen")
+    @Description("Items is open by default; each tab shows its own list and hides the previous one")
+    void storeTabsSwitchTheList() {
+        ShopPage shop = start.pressStart().pressStore();
+        assertThat(shop.isListShown(ShopPage.Tab.ITEMS)).as("Items list is open by default").isTrue();
+
+        ShopPage.Tab previous = ShopPage.Tab.ITEMS;
+        for (ShopPage.Tab tab : new ShopPage.Tab[]{ShopPage.Tab.CHARACTERS, ShopPage.Tab.ACCESSORIES, ShopPage.Tab.THEMES}) {
+            Allure.step("Open tab " + tab, () -> shop.openTab(tab));
+            assertThat(shop.isListShown(tab)).as("%s list is shown", tab).isTrue();
+            assertThat(shop.isListShown(previous)).as("%s list is hidden after switching to %s", previous, tab).isFalse();
+            previous = tab;
+        }
+    }
+
+    @Test
     @DisplayName("ALT-05 Store opens from the main menu with all four tabs")
     void storeOpensWithAllTabs() {
         MainMenuPage menu = start.pressStart();

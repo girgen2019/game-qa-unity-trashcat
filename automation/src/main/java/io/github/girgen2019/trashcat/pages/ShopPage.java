@@ -1,6 +1,7 @@
 package io.github.girgen2019.trashcat.pages;
 
 import com.alttester.AltDriver;
+import com.alttester.Commands.FindObject.AltFindObjectsParams;
 
 /**
  * Store (scene "Shop", loaded on top of the main menu): title, four tabs and the currency counters.
@@ -20,6 +21,36 @@ public class ShopPage extends BasePage {
                 && byPath("//TabsSwitch/Character") != null
                 && byPath("//TabsSwitch/Accesories") != null
                 && byPath("//TabsSwitch/Themes") != null;
+    }
+
+    /**
+     * Store tabs and the list each one shows (Canvas/Background/... in Shop.unity). ShopUI closes the
+     * open list and activates the new one, so exactly one list is on screen. Items is open by default.
+     */
+    public enum Tab {
+        ITEMS("Item", "ItemsList"),
+        CHARACTERS("Character", "CharacterList"),
+        ACCESSORIES("Accesories", "CharacterAccessoriesList"),
+        THEMES("Themes", "ThemeList");
+
+        final String button;
+        final String list;
+
+        Tab(String button, String list) {
+            this.button = button;
+            this.list = list;
+        }
+    }
+
+    public void openTab(Tab tab) {
+        byPath("//TabsSwitch/" + tab.button).tap();
+        byPath("//Background/" + tab.list);
+    }
+
+    /** True when the tab's list is on screen (inactive lists are not found). */
+    public boolean isListShown(Tab tab) {
+        return driver.findObjects(new AltFindObjectsParams.Builder(AltDriver.By.PATH, "//Background/" + tab.list)
+                .build()).length > 0;
     }
 
     public boolean currencyCountersShown() {
