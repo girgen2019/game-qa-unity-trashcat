@@ -53,6 +53,7 @@ The game is built with the AltTester® Unity SDK, which lets tests find real gam
 | ALT-07 | In-game: Settings popup opens (3 volume sliders, Delete Data, Close) and closes back to the menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | ALT-08 | In-game: Leaderboard opens (title, score table, close) and closes back to the menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | ALT-09 | In-game: Missions popup opens (title, missions list, close) and closes back to the menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
+| ALT-10 | In-game: the Store back button unloads the Store and returns to the main menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | — | `CrashDetector` unit tests on real logcat lines (incl. Xiaomi system noise) | Unit | ✅ |
 | — | `TestConfig` unit tests: defaults from `config.properties`, `-D` overrides, trimming | Unit | ✅ |
 | — | `AdbOutput` unit tests: parsing `am start -W` and `dumpsys meminfo` output (real samples) | Unit | ✅ |

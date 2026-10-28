@@ -25,4 +25,15 @@ public class ShopPage extends BasePage {
     public boolean currencyCountersShown() {
         return byName("CoinsCounter") != null && byName("PremiumCounter") != null;
     }
+
+    /**
+     * Taps the store's back button (Canvas/Background/Button -> ShopUI.CloseScene, which unloads the
+     * Shop scene) and waits until the store is gone. Only the Shop and Start scenes have a "Canvas",
+     * and Start is not loaded at this point, so the path is unambiguous.
+     */
+    public MainMenuPage close() {
+        byPath("//Canvas/Background/Button").tap();
+        waitUntilGone(AltDriver.By.PATH, "//StoreTitle");
+        return new MainMenuPage(driver);
+    }
 }

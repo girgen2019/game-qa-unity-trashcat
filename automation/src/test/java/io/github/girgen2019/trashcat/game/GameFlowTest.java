@@ -138,6 +138,18 @@ class GameFlowTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("ALT-10 Back button in the Store returns to the main menu")
+    @Description("The store is loaded on top of the main menu; its back button unloads it and the menu is usable again")
+    void storeBackButtonReturnsToMainMenu() {
+        ShopPage shop = start.pressStart().pressStore();
+        assertThat(shop.isDisplayed()).as("Store is open").isTrue();
+
+        MainMenuPage menu = Allure.step("Tap the Store back button", shop::close);
+
+        assertThat(menu.isDisplayed()).as("Main menu after leaving the Store").isTrue();
+    }
+
+    @Test
     @DisplayName("ALT-05 Store opens from the main menu with all four tabs")
     void storeOpensWithAllTabs() {
         MainMenuPage menu = start.pressStart();
