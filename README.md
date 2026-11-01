@@ -55,6 +55,7 @@ The game is built with the AltTester® Unity SDK, which lets tests find real gam
 | ALT-09 | In-game: Missions popup opens (title, missions list, close) and closes back to the menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | ALT-10 | In-game: the Store back button unloads the Store and returns to the main menu *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | ALT-11 | In-game: Store tabs (Items → Characters → Accessories → Themes) each show their list and hide the previous one *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
+| ALT-12 | In-game: on pause the track stops and the distance stays the same for 2 s; after Resume it moves again (read from `TrackManager`, the HUD is hidden on pause) *(written, not run yet)* | Game + AltTester Desktop | ❌ needs the game |
 | — | `CrashDetector` unit tests on real logcat lines (incl. Xiaomi system noise) | Unit | ✅ |
 | — | `TestConfig` unit tests: defaults from `config.properties`, `-D` overrides, trimming | Unit | ✅ |
 | — | `AdbOutput` unit tests: parsing `am start -W` and `dumpsys meminfo` output (real samples) | Unit | ✅ |

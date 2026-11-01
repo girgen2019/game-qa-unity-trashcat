@@ -35,6 +35,25 @@ public class GamePlayPage extends BasePage {
         return Integer.parseInt(text.replaceAll("[^0-9]", ""));
     }
 
+    /**
+     * Distance straight from TrackManager.worldDistance. Unlike the HUD text it can be read during a pause:
+     * GameState.Pause() hides the whole HUD (wholeUI), but the TrackManager object stays in the scene.
+     */
+    public float trackDistance() {
+        return byName("TrackManager").callComponentMethod(
+                new AltCallComponentMethodParams.Builder(
+                        "TrackManager", "get_worldDistance", "Assembly-CSharp", new Object[]{}).build(),
+                Float.class);
+    }
+
+    /** TrackManager.isMoving: false while paused (GameState.Pause() calls trackManager.StopMove()). */
+    public boolean isTrackMoving() {
+        return byName("TrackManager").callComponentMethod(
+                new AltCallComponentMethodParams.Builder(
+                        "TrackManager", "get_isMoving", "Assembly-CSharp", new Object[]{}).build(),
+                Boolean.class);
+    }
+
     public PauseMenuPage pressPause() {
         byPath("//pauseButton").tap();
         return new PauseMenuPage(driver);

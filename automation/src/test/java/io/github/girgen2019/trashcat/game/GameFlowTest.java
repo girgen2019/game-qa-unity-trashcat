@@ -166,6 +166,35 @@ class GameFlowTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("ALT-12 The run stands still while paused and moves again after Resume")
+    @Description("Pause stops the track (TrackManager.isMoving = false) and freezes the distance; "
+            + "after Resume the track moves and the distance grows again. The distance is read from "
+            + "TrackManager because the HUD is hidden during a pause")
+    void runStandsStillWhilePaused() throws InterruptedException {
+        GamePlayPage game = start.pressStart().pressRun();
+
+        Allure.step("Tap pause", game::pressPause);
+        assertThat(game.isTrackMoving()).as("Track is moving during the pause").isFalse();
+
+        float paused = game.trackDistance();
+        Allure.step("Stay in the pause for 2 s");
+        Thread.sleep(2000);
+        float stillPaused = game.trackDistance();
+
+        GamePlayPage resumed = Allure.step("Tap Resume", () -> new PauseMenuPage(driver).pressResume());
+        Allure.step("Let the cat run for 2 s");
+        Thread.sleep(2000);
+        float running = resumed.trackDistance();
+
+        Allure.addAttachment("Distance", "text/plain",
+                String.format("paused: %.1f m -> after 2 s of pause: %.1f m -> 2 s after Resume: %.1f m",
+                        paused, stillPaused, running), ".txt");
+        assertThat(stillPaused).as("Distance after 2 s of pause (was %.1f m)", paused).isEqualTo(paused);
+        assertThat(resumed.isTrackMoving()).as("Track is moving after Resume").isTrue();
+        assertThat(running).as("Distance 2 s after Resume (was %.1f m)", stillPaused).isGreaterThan(stillPaused);
+    }
+
+    @Test
     @DisplayName("ALT-05 Store opens from the main menu with all four tabs")
     void storeOpensWithAllTabs() {
         MainMenuPage menu = start.pressStart();
